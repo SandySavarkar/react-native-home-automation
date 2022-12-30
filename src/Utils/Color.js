@@ -1,3 +1,4 @@
+import { Appearance } from "react-native";
 const Color = {
   DARK_GRAY: '#A5A5A5',
 
@@ -32,6 +33,7 @@ const Color = {
   PRIMARY:
   "#14A68B",
   DARK_GREY: "#3C445E",
+  NORMAL_TEXT_COLOR :Appearance.getColorScheme()=== 'dark' ? "#6f6e92":"#6f6e92"
 
 };
 

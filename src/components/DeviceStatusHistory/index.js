@@ -28,7 +28,7 @@ const DeviceStatusHistory = ({history}) => {
             <Text style={[styles.width,{fontWeight:'bold'}]}>{"On Time"}</Text> 
             <Text style={[styles.width,{fontWeight:'bold'}]}>{'Off Time'}</Text>
             <View style={styles.container}>
-                <Text style={{fontWeight:'bold'}}>Consumption</Text>
+                <Text style={[{fontWeight:'bold'},styles.textColor]}>Consumption</Text>
             </View>
         </View>
         )}
@@ -36,7 +36,7 @@ const DeviceStatusHistory = ({history}) => {
         header
         keyExtractor={item=>item.id}
         />:
-        <Text >History not found</Text>}
+        <Text style={styles.textColor}>History not found</Text>}
     </View>
   )
 }
@@ -67,5 +67,8 @@ const styles = StyleSheet.create({
     alignSelf:'center',
     marginRight:5
    },
-   width:{width:Dimensions.get('window').width/3}
+   width:{width:Dimensions.get('window').width/3,
+        color:Color.NORMAL_TEXT_COLOR
+    },
+    textColor:{color:Color.NORMAL_TEXT_COLOR}
 })

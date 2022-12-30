@@ -33,10 +33,10 @@ const Scheduler = ({deviceInfo, cbSuccess}) => {
     }
   return (
     <View style={{marginVertical: 20}}>
-      <Text>Set {deviceInfo.name} on time</Text>
+      <Text style={styles.textColor}>Set {deviceInfo.name} on time</Text>
 
       <DateTimePicker date={schedularTime.startTime} onChange={(time)=>{console.log('startTime time', time);setSchedularTime({startTime:time,endTime:schedularTime.endTime})}} />
-      <Text>Set {deviceInfo.name} off time</Text>
+      <Text style={styles.textColor}>Set {deviceInfo.name} off time</Text>
 
       <DateTimePicker date={schedularTime.endTime} onChange={(time)=>{console.log('endTime ', time );setSchedularTime({startTime:schedularTime.startTime,endTime:time})}} />
       {errorMessage?<Text style={{color:Color.ERROR}}>{errorMessage}</Text>:null}
@@ -61,4 +61,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 8,
   },
+  textColor:{
+    color:Color.NORMAL_TEXT_COLOR
+  }
 });

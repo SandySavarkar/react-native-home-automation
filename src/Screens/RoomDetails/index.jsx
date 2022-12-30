@@ -189,9 +189,7 @@ import moment from 'moment'
       }
       setIsEdit(!isEdit);
     };
-    const handleHistory =()=>{
   
-    }
     return (
       <SafeAreaView>
         <Text style={styles.header}>{details?.name}</Text>
@@ -223,6 +221,7 @@ import moment from 'moment'
                 defaultValu={activePin?.limit}
                 value={limit}
                 placeholder={'Enter unit'}
+                placeholderTextColor={Color.NORMAL_TEXT_COLOR}
                 keyboardType="numeric"
               />
             ) : (
@@ -237,8 +236,8 @@ import moment from 'moment'
             </TouchableOpacity>
           </View>
               <View>
-              <Text style={styles.info}>Unit Consumed by {activePin?.pinName} : {(activePinHistory?.totleUnit)?.toFixed(2)} kWh</Text>
-              <Text style={styles.info}>Total Cost: {(activePinHistory?.totleCost)?.toFixed(2)} ₹</Text>
+              <Text style={styles.info}>Consumed unit {activePin?.pinName} : {activePinHistory?.totleUnit? (activePinHistory?.totleUnit)?.toFixed(2):0.0} kWh</Text>
+              <Text style={styles.info}>Total Cost: {activePinHistory?.totleCost?(activePinHistory?.totleCost).toFixed(2):0} ₹</Text>
               </View>
         <TouchableOpacity
           onPress={() => setScheduleModal(true)}
@@ -271,6 +270,7 @@ import moment from 'moment'
       backgroundColor: Color.WHITE,
       fontSize: 20,
       fontWeight: 'bold',
+      color:Color.NORMAL_TEXT_COLOR
     },
     toggleButton: {
       alignSelf: 'center',
@@ -313,7 +313,8 @@ import moment from 'moment'
     info:{
       fontWeight:'bold',
       marginLeft:30,
-      marginTop:10
+      marginTop:10,
+      color:Color.NORMAL_TEXT_COLOR
     }
   });
   

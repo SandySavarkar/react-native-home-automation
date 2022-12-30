@@ -17,7 +17,7 @@ export const Login = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const navigation = useNavigation();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const handleSubmit = () => {
     // var isValid;
     // let {email, password} = user;
@@ -47,7 +47,7 @@ export const Login = () => {
       }
       APIs.login(param).then(res=>{
         console.log('login res', res)
-        if(!res.data.message){
+        if(!res?.data?.message){
           dispatch(saveAuthData(res?.data))
         navigation.navigate('AuthRoute')
         }else{
@@ -71,7 +71,8 @@ export const Login = () => {
         <View style={styles.inputContainer}>
           <TextInput
             placeholder="Enter email"
-            style={styles.input}
+            placeholderTextColor={Color.NORMAL_TEXT_COLOR}
+            style={[styles.input,{color:Color.NORMAL_TEXT_COLOR}]}
             keyboardType={'email-address'}
             onChangeText={text => setUser({...user, email: text})}
             //  onBlur={handleBlur('email')}
@@ -84,7 +85,8 @@ export const Login = () => {
         <View style={styles.inputContainer}>
           <TextInput
             placeholder="Enter password"
-            style={styles.input}
+            placeholderTextColor={Color.NORMAL_TEXT_COLOR}
+            style={[styles.input,{color:Color.NORMAL_TEXT_COLOR}]}
             secureTextEntry
             onChangeText={text => setUser({...user, password: text})}
             //  onBlur={handleBlur('password')}
