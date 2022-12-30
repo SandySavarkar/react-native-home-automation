@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     View,
     TextInput,
+    SafeAreaView
   } from 'react-native';
   import React, {useMemo, useState, useEffect, useContext, useRef} from 'react';
   import DeviceListing from '../../components/DeviceListing';
@@ -181,7 +182,7 @@ import moment from 'moment'
   
     }
     return (
-      <View>
+      <SafeAreaView>
         <Text style={styles.header}>{details?.name}</Text>
         <DeviceListing
           activePinId={activePinId}
@@ -258,7 +259,7 @@ import moment from 'moment'
             }}
           />
         </BottomModal>
-      </View>
+      </SafeAreaView>
     );
   };
   const styles = StyleSheet.create({
