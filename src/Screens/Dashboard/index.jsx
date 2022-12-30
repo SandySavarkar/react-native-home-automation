@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, ScrollView, FlatList, SafeAreaView,StyleSheet,TouchableOpacity,Image,RefreshControl} from 'react-native';
+import {View, ScrollView, FlatList, SafeAreaView,StyleSheet,TouchableOpacity,Image,RefreshControl, Text} from 'react-native';
 
 import EnergyConsumptionCard from '../../components/EnergyConsumptionCard';
 import RoomCard from '../../components/RoomCard';
@@ -78,7 +78,6 @@ export const Dashboard = () => {
         totleUnit = pinHistory[i].consumptionWattPerHour / 1000
       }
     }
-    console.log('totle: ', totle);
     return {
       totleDuration:totle,
       totleUnit,
@@ -171,7 +170,7 @@ export const Dashboard = () => {
                           <Text style={{fontSize:16,fontWeight:"bold",color:"#FFFFFF"}}>Over Consupction alert</Text>
                           <View>
                             <Text  style={{fontSize:14,color:"#ffffff"}}>{`${item.name}, ${pin.pinName}`}</Text>
-                            <Text style={{fontSize:14,color:"#ffffff"}}>{`${overLimit.totleUnit}kWh`}</Text>
+                            <Text style={{fontSize:14,color:"#ffffff"}}>{`${overLimit.totleUnit.toFixed(3)}kWh`}</Text>
                           </View>
                         </View>
                     )

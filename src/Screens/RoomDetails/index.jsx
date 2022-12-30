@@ -126,10 +126,8 @@ import moment from 'moment'
     },[activePinId,pinsHistoryData]);
 
     const updatePinValue = (item) => {
-      console.log('item: ', item);
       let tempItem = [...globlePinArray];
       const index = tempItem.findIndex(e => e.pinId === item.pinId);
-      console.log('index: ', index);
       tempItem[index] = {
         ...tempItem[index],
         status: item.value
@@ -183,7 +181,7 @@ import moment from 'moment'
         let param = {
           "serial_number":details?.serial_number,
           "pinId":activePin.pinId,
-          "watt":activePin.limit
+          "limit":limit
         }
         APIs.updatePinLimit(param).then((res)=>{
           setPinArray([...tempItem]);

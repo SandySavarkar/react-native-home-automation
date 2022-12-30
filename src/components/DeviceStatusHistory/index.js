@@ -13,7 +13,7 @@ const DeviceStatusHistory = ({history}) => {
                 <Text style={styles.width}>{item.switch_off_time ? moment(item.switch_off_time).format("DD/MM/YYYY hh:mm") : "Still On"}</Text>
                 <View style={styles.container}>
                     <View style={[styles.mark,{backgroundColor:color}]}></View>
-                    <Text>{(item.consumptionWattPerHour/1000)}kWh</Text>
+                    <Text>{(item.consumptionWattPerHour/1000).toFixed(2)}kWh</Text>
                 </View>
             </View>
         )
