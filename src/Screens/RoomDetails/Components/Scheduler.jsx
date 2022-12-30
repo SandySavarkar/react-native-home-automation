@@ -56,7 +56,7 @@ export default Scheduler;
 const styles = StyleSheet.create({
   button: {
     backgroundColor: Color.DARK_BLUE,
-    margin: 30,
+    marginHorizontal: 30,
     alignSelf: 'flex-start',
     padding: 15,
     borderRadius: 8,

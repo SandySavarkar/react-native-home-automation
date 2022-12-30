@@ -5,7 +5,8 @@ import {
     TouchableOpacity,
     View,
     TextInput,
-    SafeAreaView
+    SafeAreaView,
+    ScrollView
   } from 'react-native';
   import React, {useMemo, useState, useEffect, useContext, useRef} from 'react';
   import DeviceListing from '../../components/DeviceListing';
@@ -115,7 +116,6 @@ import moment from 'moment'
     handleUpdateHistory(history)
   },[history])
 
-  
     const activePin = useMemo(() => {
       return pinsArray.find(item => item.pinId === activePinId);
     }, [pinsArray, activePinId]);
@@ -179,8 +179,15 @@ import moment from 'moment'
           ...tempItem[index],
           limit: limit,
         };
-  
-        setPinArray([...tempItem]);
+        
+        let param = {
+          "serial_number":details?.serial_number,
+          "pinId":activePin.pinId,
+          "watt":activePin.limit
+        }
+        APIs.updatePinLimit(param).then((res)=>{
+          setPinArray([...tempItem]);
+        }).catch(error=>{console.log('Error while updating limit', error)})
       }
       setIsEdit(!isEdit);
     };
@@ -190,6 +197,7 @@ import moment from 'moment'
     return (
       <SafeAreaView>
         <Text style={styles.header}>{details?.name}</Text>
+        <ScrollView >
         <DeviceListing
           activePinId={activePinId}
           data={pinsArray}
@@ -214,6 +222,7 @@ import moment from 'moment'
               <TextInput
                 onChangeText={(text) => setLimit(text)}
                 style={[styles.text, styles.input]}
+                defaultValu={activePin?.limit}
                 value={limit}
                 placeholder={'Enter unit'}
                 keyboardType="numeric"
@@ -223,12 +232,16 @@ import moment from 'moment'
             )}
             <Text style={styles.text}> kWh </Text>
             <TouchableOpacity onPress={handleLimit}>
-              <Text style={[styles.text, {color: Color.BLUE,marginLeft:20}]}>
-                {isEdit && activePin.limit ? 'Update' : !activePin.limit ? 'Set' :'Edit'}
+              <Text style={[styles.text, {color: Color.BLUE,marginLeft:10}]}>
+                {/* {isEdit && activePin.limit ? 'Update' : !activePin.limit ? 'Set' :'Edit'} */}
+                {isEdit?'Update':'Edit'}
               </Text>
             </TouchableOpacity>
           </View>
-      
+              <View>
+              <Text style={styles.info}>Unit Consumed by {activePin?.pinName} : {(activePinHistory?.totleUnit).toFixed(2)} kWh</Text>
+              <Text style={styles.info}>Total Cost: {(activePinHistory?.totleCost).toFixed(2)} ₹</Text>
+              </View>
         <TouchableOpacity
           onPress={() => setScheduleModal(true)}
           style={styles.button}>
@@ -236,13 +249,6 @@ import moment from 'moment'
             {activePin.isScheduled ? 'Update' : 'Schedule'} Automation Time
           </Text>
         </TouchableOpacity>
-      <TouchableOpacity
-            onPress={handleHistory}
-             style={styles.button}>
-             <Text style={[styles.text, {color: Color.WHITE}]}>
-               Set Consumption Limit
-             </Text>
-             </TouchableOpacity>
         <DeviceStatusHistory history={activePinHistory?.history} />
         <BottomModal
           isOpen={isOpenScheduleModal}
@@ -257,6 +263,7 @@ import moment from 'moment'
             }}
           />
         </BottomModal>
+        </ScrollView>
       </SafeAreaView>
     );
   };
@@ -299,10 +306,16 @@ import moment from 'moment'
     },
     button: {
       backgroundColor: Color.DARK_BLUE,
-      margin: 30,
+      marginLeft: 30,
+      marginVertical:20,
       alignSelf: 'flex-start',
       padding: 15,
       borderRadius: 8,
     },
+    info:{
+      fontWeight:'bold',
+      marginLeft:30,
+      marginTop:10
+    }
   });
   

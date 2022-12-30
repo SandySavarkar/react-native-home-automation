@@ -15,5 +15,11 @@ export default {
     },
     getHistory(param){
         return Api.post('/getUserHistory',param)
+    },
+    updatePinLimit(param){
+        return Api.put('/updateDevicePinData',param)
+    },
+    login(param){
+        return Api.post('/login',param)
     }
 };
