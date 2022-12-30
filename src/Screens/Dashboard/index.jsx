@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, ScrollView, FlatList, SafeAreaView} from 'react-native';
+import {View, ScrollView, FlatList, SafeAreaView,Text} from 'react-native';
 
 import EnergyConsumptionCard from '../../components/EnergyConsumptionCard';
 import RoomCard from '../../components/RoomCard';
@@ -57,7 +57,7 @@ const roomData = [
   },
 ];
 export const Dashboard = () => {
-  const {history} = useSelector(state => state.history);
+  const {history, pinsHistoryData} = useSelector(state => state.history);
 
   const [state, setState] = useState({});
   const dispatch = useDispatch();
@@ -122,13 +122,25 @@ export const Dashboard = () => {
         pinHistoryData[pinHistory[0].pin_Id] = getTotleAmoutOfPin(pinHistory);
         
       }
-      console.log('pinHistoryData: ', pinHistoryData);
       dispatch(updatePinsHistoryData(pinHistoryData));
   }
 
   useEffect(()=>{
-    handleUpdateHistory(history)
-  },[history])
+    handleUpdateHistory(history);
+  },[history]);
+
+  const checkForLimit = (item) => {
+    let totleUnit = pinsHistoryData[item.pinId]?.totleUnit;
+    if(totleUnit){
+      if(totleUnit > item.limit){
+        return {
+          totleUnit
+        }
+      }
+     return false;
+    }
+    return false
+  }
   const renderRoomCard = ({item}) => {
     return (
       <RoomCard
@@ -153,7 +165,36 @@ export const Dashboard = () => {
           numColumns={2}
           style={{alignSelf: 'center'}}
         />
-        <AlertBox message={'Eorrorrr'}/>
+        {state?.devices && state?.devices.map(item=>{
+          return (
+            <View style={{padding:22}}>
+              {
+                item.pins.map(pin=>{
+                  let overLimit = checkForLimit(pin);
+                  if(overLimit){
+                    return (
+                      <View style={{height:48,width:"100%",backgroundColor:"red",borderRadius:8,flexDirection:"row",alignItems:"center",justifyContent:"space-between",paddingLeft:12,paddingRight:12,marginTop:12}}>
+                          <Text style={{fontSize:16,fontWeight:"bold",color:"#FFFFFF"}}>Over Consupction alert</Text>
+                          <View>
+                            <Text  style={{fontSize:14,color:"#ffffff"}}>{`${item.name}, ${pin.pinName}`}</Text>
+                            <Text style={{fontSize:14,color:"#ffffff"}}>{`${overLimit.totleUnit}kWh`}</Text>
+                          </View>
+                        </View>
+                    )
+                  } 
+                  return null
+                
+                 
+                })
+              }
+             
+            </View>
+              
+          )
+        })
+
+        }
+       
       </ScrollView>
     </SafeAreaView>
   );
