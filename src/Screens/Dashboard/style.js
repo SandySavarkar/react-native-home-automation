@@ -4,7 +4,7 @@ import Color from "../../Utils/Color";
 const styles = StyleSheet.create({
     body:{
         flex:1,
-        backgroundColor:Color.WHITE,
+        backgroundColor:Color.CLOUD_WHITE,
     },
     container:{
         paddingHorizontal:20,
