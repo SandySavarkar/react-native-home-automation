@@ -14,7 +14,7 @@ import moment from "moment";
 import { UNIT_PRICE } from '../../utils/constants';
 export const Dashboard = () => {
   const {history} = useSelector(state => state.history);
-
+  const {auth} = useSelector(state => state.auth);
   const [state, setState] = useState({});
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -37,19 +37,8 @@ export const Dashboard = () => {
     wait(2000).then(() => setRefreshing(false));
   }, []);
 
-  // const getDeviceHistory = id => {
-  //   APIs.getHistory({
-  //     device_id: '63ad829f9f933d1c3462cc41',
-  //   })
-  //     .then(res => {
-  //       dispatch(updateHistory(res.data));
-  //       // setState(res.data[0]);
-  //     })
-  //     .catch(error => console.log('getMyDevice error', error));
-  // };
-
   useEffect(() => {
-    let param = {user_id: '63aec6a271076673a32d7605'};
+    let param = {user_id: auth.id};
     APIs.getMyDevice(param)
       .then(res => {
         getDeviceHistory(res?.data[0]?.devices[0]?._id)  

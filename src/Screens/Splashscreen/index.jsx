@@ -18,7 +18,7 @@ export const Splashscreen = () => {
   };
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/images/logo.png')}/>
+      <Image source={require('../../assets/images/logo.png')} style={styles.image}/>
       <Text>Nikola Techies welcomes you</Text>
     </View>
   );
@@ -30,5 +30,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
- 
+  image:{
+    width:ThemeUtils.relativeWidth(80),
+    height:ThemeUtils.relativeWidth(80)
+  }
 });

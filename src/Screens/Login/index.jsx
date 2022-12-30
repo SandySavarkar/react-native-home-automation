@@ -9,11 +9,15 @@ import React, {useState} from 'react';
 import styles from './style';
 import Color from '../../utils/Color';
 import { useNavigation } from '@react-navigation/native';
+import APIs from '../../api/APIs';
+import { saveAuthData } from '../../redux/reducers/authSlice';
+import { useDispatch } from 'react-redux';
 export const Login = () => {
   const [user, setUser] = useState({email: '', password: ''});
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+  const dispatch = useDispatch()
   const handleSubmit = () => {
     // var isValid;
     // let {email, password} = user;
@@ -35,8 +39,21 @@ export const Login = () => {
     //   setPasswordError('');
     // }
     // if (isValid) {
-      navigation.navigate('AuthRoute')
-    // } 
+    if(user.email && user.password){
+      let param = {
+        email:user.email,
+        password:user.password
+      }
+      APIs.login(param).then(res=>{
+        console.log('login res', res)
+        dispatch(saveAuthData(res?.data))
+        navigation.navigate('AuthRoute')
+      }).catch(error=>console.log('login error', error))
+        
+    }else{
+
+      setPasswordError('Please enter valid data')
+    }
   };
   return (
     <SafeAreaView style={styles.body}>
