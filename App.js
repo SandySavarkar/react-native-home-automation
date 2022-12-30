@@ -1,20 +1,23 @@
 import React from 'react';
+import {Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import RootNavigator from './src/Routes';
-import {store,persistor} from './src/Redux';
+import {Provider} from 'react-redux';
+import {store, persistor} from './src/redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
-import { Provider } from 'react-redux';
-
+import {StackNavigation} from './src/navigations/StackNavigation';
+import {socket, SocketContext} from './src/contexts/Socket';
 const App = () => {
   return (
     <>
-      <Provider store={store}>
-        <PersistGate persistor={persistor}>
-          <NavigationContainer>
-            <RootNavigator/>
-          </NavigationContainer>
-        </PersistGate>
-      </Provider>
+      <SocketContext.Provider value={socket}>
+        <Provider store={store}>
+          <PersistGate persistor={persistor}>
+            <NavigationContainer>
+              <StackNavigation />
+            </NavigationContainer>
+          </PersistGate>
+        </Provider>
+      </SocketContext.Provider>
     </>
   );
 };
