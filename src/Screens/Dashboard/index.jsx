@@ -1,22 +1,19 @@
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native';
-import styles from './style'
-const Dashboard =()=> {
-    const navigation = useNavigation()
-    return (
-        <SafeAreaView>
-        <ScrollView>
-            {/* Header view */}
-            <View>
-                <Text>Hello, Nikola Techies</Text>
-            </View>
-            <Pressable onPress={()=>navigation.navigate('RoomDetails')}>
-                        <Text>Go to Room details</Text>
-                    </Pressable>
-        </ScrollView>
+import { SafeAreaView, ScrollView, Text} from 'react-native';
+import ConsumptionCard from '../../Components/ConsumptionCard';
+import styles from './style';
+const Dashboard = () => {
+  const navigation = useNavigation();
+  return (
+    <SafeAreaView style={styles.body}>
+      <ScrollView style={styles.container}>
+        {/* Header view */}
+        <Text style={styles.headerText}>Hello, Nikola Techies ☀️</Text>
+        <ConsumptionCard/>
+      </ScrollView>
     </SafeAreaView>
-    )
+  )
 };
 export default Dashboard;
 
