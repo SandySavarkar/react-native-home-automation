@@ -8,9 +8,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import APIs from '../../api/APIs';
 import AlertBox from '../../components/AlertBox';
-import { updateHistory } from '../../redux/reducers/historySlice';
+import { updateHistory, updatePinsHistoryData } from '../../redux/reducers/historySlice';
 import { groupByKey } from '../../utils/helpers';
 import moment from "moment"
+import { UNIT_PRICE } from '../../utils/constants';
 const roomData = [
   {
     id: 123,
@@ -62,26 +63,22 @@ export const Dashboard = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-
-
   const getDeviceHistory = (id) => {
-   
     APIs.getHistory({
-      device_id: "63ad829f9f933d1c3462cc41"
+      device_id: id
   })
     .then(res => {
       dispatch(updateHistory(res.data));
-      // setState(res.data[0]);
     })
-    .catch(error => console.log('getMyDevice error', error));
+    .catch(error => console.log('get history error', error));
   }
 
 
   useEffect(() => {
-    let param = {user_id: '63aadc8f5c2341b86b6655c7'};
+    let param = {user_id: '63aec6a271076673a32d7605'};
     APIs.getMyDevice(param)
       .then(res => {
-        getDeviceHistory(res.data[0]._id)
+        getDeviceHistory(res?.data[0]?.devices[0]?._id)  
         setState(res.data[0]);
       })
       .catch(error => console.log('getMyDevice error', error));
@@ -90,27 +87,29 @@ export const Dashboard = () => {
 
   const getTotleAmoutOfPin = (pinHistory) => {
     let totle = 0;
+    let totleUnit = 0;
     
     if(!pinHistory[pinHistory.length -1].switch_off_time){
       const current = moment();
-      console.log('current: ', current);
-      console.log('pinHistory[pinHistory.length -1].switch_on_time: ', pinHistory[pinHistory.length -1].switch_on_time);
      const diffrent = current.diff(moment(pinHistory[pinHistory.length -1].switch_on_time)._d,"seconds");
      const diffHours = diffrent / 3600;
      totle = diffHours;
+     totleUnit = (pinHistory[0].defaultWattOfPin * diffHours )/ 1000
     }
     for(let i=0;i<pinHistory.length; i++){
       if(pinHistory[i].switch_off_time && pinHistory[i].switch_on_time){
         let duration = Number(pinHistory[i].duration.replace('hr', ''));
-        console.log('duration: ', duration);
         totle = totle + duration;
+        totleUnit = pinHistory[i].consumptionWattPerHour / 1000
       }
     }
     return {
-      totle,
+      totleDuration:totle,
+      totleUnit,
+      totleCost :totleUnit * UNIT_PRICE,
       history:pinHistory,
       pinId:pinHistory[0].pin_Id,
-      watt:1000
+      watt:pinHistory[0].defaultWattOfPin
     }
   }
 
@@ -121,7 +120,10 @@ export const Dashboard = () => {
       for(let i=0; i<pinsArray.length; i++){
         let pinHistory = pinsArray[i];
         pinHistoryData[pinHistory[0].pin_Id] = getTotleAmoutOfPin(pinHistory);
+        
       }
+      console.log('pinHistoryData: ', pinHistoryData);
+      dispatch(updatePinsHistoryData(pinHistoryData));
   }
 
   useEffect(()=>{
@@ -145,7 +147,7 @@ export const Dashboard = () => {
         </View>
         <EnergyConsumptionCard />
         <FlatList
-          data={state.devices}
+          data={state?.devices || []}
           renderItem={renderRoomCard}
           keyExtractor={item => item.id}
           numColumns={2}

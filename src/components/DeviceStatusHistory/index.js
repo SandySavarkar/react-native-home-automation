@@ -1,17 +1,20 @@
 import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Color from '../../utils/Color'
+import moment from 'moment'
 
 const DeviceStatusHistory = ({history}) => {
     const renderItem = ({item}) =>{
+        console.log('item.switch_on_time: ', item.switch_on_time);
         let color = item.consumption >100 ? 'red':item.consumption==100?'orange':'green'
         return (
             <View style={styles.container}>
-                <Text style={styles.width}>{item.startTime}</Text>
-                <Text style={styles.width}>{item.endTime}</Text>
+                <Text style={styles.width}>{moment(item.switch_on_time).format("DD/MM/YYYY hh:mm")}</Text>
+                
+                <Text style={styles.width}>{item.switch_off_time ? moment(item.switch_off_time).format("DD/MM/YYYY hh:mm") : "Still On"}</Text>
                 <View style={styles.container}>
                     <View style={[styles.mark,{backgroundColor:color}]}></View>
-                    <Text>{item.consumption}kWh</Text>
+                    <Text>{item.consumptionWattPerHour}kWh</Text>
                 </View>
             </View>
         )

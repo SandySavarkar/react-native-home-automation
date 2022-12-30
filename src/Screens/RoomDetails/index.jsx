@@ -13,6 +13,13 @@ import {
   import {SocketContext} from '../../contexts/Socket';
   import BottomModal from '../../components/BottomModal';
   import Scheduler from './Components/Scheduler';
+import { useDispatch, useSelector } from 'react-redux';
+import APIs from '../../api/APIs';
+import { updateHistory, updatePinsHistoryData } from '../../redux/reducers/historySlice';
+import { groupByKey } from '../../utils/helpers';
+import {UNIT_PRICE} from '../../utils/constants';
+
+import moment from 'moment'
   
   export const LAPM_PINS = [
     {
@@ -38,31 +45,105 @@ import {
   
   export const RoomDetails = ({route}) => {
     const {details} = route?.params;
-    console.log('details: ', details);
-    // const [activePin, setActivePin] = useState({});
+    const dispatch = useDispatch();
     const [activePinId, setActivePinId] = useState(5);
     const [pinsArray, setPinArray] = useState(details?.pins);
     const [isOpenScheduleModal, setScheduleModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [limit, setLimit] = useState();
     const socket = useContext(SocketContext);
+    const {pinsHistoryData,history} = useSelector(state => state.history);
+
+
+    const getDeviceHistory = (id) => {
+      APIs.getHistory({
+        device_id: id
+    })
+      .then(res => {
+        dispatch(updateHistory(res.data));
+      })
+      .catch(error => console.log('get history error', error));
+    }
+    useEffect(()=>{
+      getDeviceHistory(details._id);
+    },[activePinId]);
+
+
+    const getTotleAmoutOfPin = (pinHistory) => {
+      let totle = 0;
+      let totleUnit = 0;
+      
+      if(!pinHistory[pinHistory.length -1].switch_off_time){
+        const current = moment();
+       const diffrent = current.diff(moment(pinHistory[pinHistory.length -1].switch_on_time)._d,"seconds");
+       const diffHours = diffrent / 3600;
+       totle = diffHours;
+       totleUnit = (pinHistory[0].defaultWattOfPin * diffHours )/ 1000
+      }
+      for(let i=0;i<pinHistory.length; i++){
+        if(pinHistory[i].switch_off_time && pinHistory[i].switch_on_time){
+          let duration = Number(pinHistory[i].duration.replace('hr', ''));
+          totle = totle + duration;
+          totleUnit = pinHistory[i].consumptionWattPerHour / 1000
+        }
+      }
+      return {
+        totleDuration:totle,
+        totleUnit,
+        totleCost :totleUnit * UNIT_PRICE,
+        history:pinHistory,
+        pinId:pinHistory[0].pin_Id,
+        watt:pinHistory[0].defaultWattOfPin
+      }
+    }
+
+  const handleUpdateHistory = (history) => {
+      console.log(groupByKey(history,"pin_Id"));
+      const pinsArray = Object.values(groupByKey(history,"pin_Id"));
+      let pinHistoryData = {};
+      for(let i=0; i<pinsArray.length; i++){
+        let pinHistory = pinsArray[i];
+        pinHistoryData[pinHistory[0].pin_Id] = getTotleAmoutOfPin(pinHistory);
+      }
+      dispatch(updatePinsHistoryData(pinHistoryData));
+  }
+
+  useEffect(()=>{
+    handleUpdateHistory(history)
+  },[history])
+
   
     const activePin = useMemo(() => {
       return pinsArray.find(item => item.pinId === activePinId);
     }, [pinsArray, activePinId]);
-  
-    console.log('activePin: ', activePin);
+    const activePinHistory = useMemo(()=>{
+      if(pinsHistoryData){
+        return pinsHistoryData[activePinId];
+      }
+    },[activePinId,pinsHistoryData]);
+
+    const updatePinValue = (item) => {
+      let tempItem = [...pinsArray];
+      const activePin = pinsArray.find(item => item.pinId === activePinId);
+      const index = tempItem.findIndex(e => e.pinId === activePin.pinId);
+      tempItem[index] = {
+        ...tempItem[index],
+        status: item.value
+      };
+     
+      setPinArray([...tempItem]);
+    }
   
     useEffect(() => {
       const joinData = {
-        devicesId: 1846482,
+        devicesId: Number(details?.serial_number),
         from: 'App',
       };
   
       socket.emit('join_me', joinData);
-      // socket.on('pin_state', data => {
-      //   updatePinValue(data);
-      // });
+      socket.on('pin_state', data => {
+        updatePinValue(data);
+      });
     }, [socket]);
   
     const toggleState = () => {
@@ -71,14 +152,15 @@ import {
       const index = tempItem.findIndex(e => e.pinId === activePin.pinId);
       tempItem[index] = {
         ...tempItem[index],
-        value: tempItem[index].value ? false : true,
+        status: tempItem[index].status ? false : true,
       };
       const sendData = {
         pinId: tempItem[index].pinId,
-        value: !tempItem[index].value,
-        devicesId: 1846482,
+        value: tempItem[index].status,
+        devicesId: Number(details?.serial_number),
       };
       setPinArray([...tempItem]);
+      socket.emit("buttonState",sendData);
     };
     const handleLimit = () => {
       if (isEdit) {
@@ -113,9 +195,9 @@ import {
           <Text style={styles.text}>{activePin.pinName}</Text>
           <Switch
             trackColor={{false: Color.DARK_GRAY, true: Color.SUCCESS}}
-            thumbColor={activePin.value ? '#ffff' : '#f4f3f4'}
+            thumbColor={!activePin.status ? '#ffff' : '#f4f3f4'}
             onValueChange={() => toggleState()}
-            value={activePin.value}
+            value={!activePin.status}
           />
         </View>
         {/* {!activePin.limit ? ( */}
@@ -162,7 +244,7 @@ import {
                Set Consumption Limit
              </Text>
              </TouchableOpacity>
-        <DeviceStatusHistory history={activePin?.history} />
+        <DeviceStatusHistory history={activePinHistory?.history} />
         <BottomModal
           isOpen={isOpenScheduleModal}
           header={`Schedule ${activePin.pinName}`}

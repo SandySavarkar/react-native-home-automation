@@ -2,8 +2,26 @@ import React from 'react';
 import {Image, StyleSheet,  View} from 'react-native';
 import Label from '../Label';
 import Color from '../../utils/Color';
+import { useSelector } from 'react-redux';
+import {UNIT_PRICE} from '../../utils/constants'
 
 const EnergyConsumptionCard = () => {
+  const {pinsHistoryData} = useSelector(state => state.history);
+
+  const getTodayData = (data)=>{
+    let totleUnit = 0;
+    if(data){
+      const arrayData = Object.values(data);
+      for(let i=0; i<arrayData.length;i++){
+        totleUnit = totleUnit + arrayData[i].totleUnit
+      }
+    }
+    return {
+      totleUnit:totleUnit.toFixed(2),
+      totleCost:(totleUnit*UNIT_PRICE).toFixed(2)
+    }
+
+  }
   return (
     <View style={styles.container}>
       <View style={styles.labelView}>
@@ -30,7 +48,10 @@ const EnergyConsumptionCard = () => {
           </View>
           <View>
             <Label color={Color.WHITE} small bolder>
-              31.7kWh
+             {`${getTodayData(pinsHistoryData).totleUnit}kWh`}
+            </Label>
+            <Label color={Color.WHITE} small bolder>
+             {`${getTodayData(pinsHistoryData).totleCost}₹`}
             </Label>
             <Label xsmall color={Color.WHITE}>
               Today
@@ -45,8 +66,11 @@ const EnergyConsumptionCard = () => {
             />
           </View>
           <View>
+          <Label color={Color.WHITE} small bolder>
+             {`${getTodayData(pinsHistoryData).totleUnit}kWh`}
+            </Label>
             <Label color={Color.WHITE} small bolder>
-              491.6kWh
+             {`${getTodayData(pinsHistoryData).totleCost}₹`}
             </Label>
             <Label xsmall color={Color.WHITE}>
               This month

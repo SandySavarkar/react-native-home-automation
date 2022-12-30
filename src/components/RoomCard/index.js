@@ -11,7 +11,7 @@ const RoomCard = ({data, onClick}) => {
     }
   };
   useEffect(() => {
-    let status = data?.pins.filter(item => item.status);
+    let status = data?.pins.filter(item => !item.status);
     setStatus(status.length > 0);
   }, []);
 

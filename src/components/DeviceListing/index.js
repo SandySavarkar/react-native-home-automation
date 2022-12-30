@@ -27,7 +27,7 @@ const DeviceView = ({data, active, onPress}) => {
       <Text
         style={{
           alignSelf: 'center',
-          color: data.value ? 'green' : Color.ERROR,
+          color: !data.status ? 'green' : Color.ERROR,
           fontWeight: 'bold',
         }}>
         {data.pinName}
