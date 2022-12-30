@@ -42,12 +42,17 @@ export const Login = () => {
     if(user.email && user.password){
       let param = {
         email:user.email,
-        password:user.password
+        password:user.password,
+        type:'user'
       }
       APIs.login(param).then(res=>{
         console.log('login res', res)
-        dispatch(saveAuthData(res?.data))
+        if(!res.data.message){
+          dispatch(saveAuthData(res?.data))
         navigation.navigate('AuthRoute')
+        }else{
+          setPasswordError(res?.data?.message)
+        }
       }).catch(error=>console.log('login error', error))
         
     }else{

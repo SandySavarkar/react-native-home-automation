@@ -239,8 +239,8 @@ import moment from 'moment'
             </TouchableOpacity>
           </View>
               <View>
-              <Text style={styles.info}>Unit Consumed by {activePin?.pinName} : {(activePinHistory?.totleUnit).toFixed(2)} kWh</Text>
-              <Text style={styles.info}>Total Cost: {(activePinHistory?.totleCost).toFixed(2)} ₹</Text>
+              <Text style={styles.info}>Unit Consumed by {activePin?.pinName} : {(activePinHistory?.totleUnit)?.toFixed(2)} kWh</Text>
+              <Text style={styles.info}>Total Cost: {(activePinHistory?.totleCost)?.toFixed(2)} ₹</Text>
               </View>
         <TouchableOpacity
           onPress={() => setScheduleModal(true)}

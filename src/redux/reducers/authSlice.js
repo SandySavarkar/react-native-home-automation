@@ -10,9 +10,12 @@ const authSlice =  createSlice({
     reducers:{
         saveAuthData(state,action){
             state.auth = action.payload;
+        },
+        clear(state,action){
+            state.auth=null
         }
     }
 })
 
-export const {saveAuthData} = authSlice.actions;
+export const {saveAuthData,clear} = authSlice.actions;
 export default authSlice.reducer;

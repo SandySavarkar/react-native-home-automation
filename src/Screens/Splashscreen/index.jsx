@@ -1,16 +1,18 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
+import { useSelector } from 'react-redux';
 import ThemeUtils from '../../utils/ThemeUtils';
 export const Splashscreen = () => {
   const navigation = useNavigation();
+  const {auth} =useSelector(state=>state.auth)
   useEffect(() => {
    setTimeout(() => {
     handleNavigation();
-   }, 1500);
+   }, 2000);
   }, []);
   const handleNavigation = () => {
-    if (false) {
+    if (auth) {
       navigation.navigate('AuthRoute');
     } else {
       navigation.navigate('PublicRoute');

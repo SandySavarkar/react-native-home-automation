@@ -12,6 +12,7 @@ import { updateHistory, updatePinsHistoryData } from '../../redux/reducers/histo
 import { groupByKey } from '../../utils/helpers';
 import moment from "moment";
 import { UNIT_PRICE } from '../../utils/constants';
+import { clear } from '../../redux/reducers/authSlice';
 export const Dashboard = () => {
   const {history, pinsHistoryData} = useSelector(state => state.history);
   const {auth} = useSelector(state => state.auth);
@@ -124,13 +125,17 @@ export const Dashboard = () => {
       />
     );
   };
+  const handleLogout = ()=>{
+    dispatch(clear())
+    navigation.navigate('PublicRoute')
+  }
   return (
     <SafeAreaView>
       <View style={styles.header}>
         <Label mt={10} bolder>
           Hello, Sanjay Punani ☀️
         </Label>
-        <TouchableOpacity onPress={() => navigation.navigate('PublicRoute')}>
+        <TouchableOpacity onPress={handleLogout}>
           <Image
             source={require('../../assets/images/logout.png')}
             style={styles.image}

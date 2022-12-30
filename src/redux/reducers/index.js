@@ -4,5 +4,5 @@ import historySlice from "./historySlice";
 
 export const reducers = combineReducers({
     auth:authSlice,
-    history:historySlice
+    history:historySlice,
 })
