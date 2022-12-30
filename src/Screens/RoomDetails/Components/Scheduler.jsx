@@ -7,7 +7,6 @@ import APIs from '../../../api/APIs'
 const Scheduler = ({deviceInfo, cbSuccess}) => {
     const [schedularTime, setSchedularTime] = useState({startTime:new Date(),endTime:new Date()});
     const [errorMessage, setErrorMessage] = useState('')
-    console.log('schedularTime: ', schedularTime);
     const handleSchedulerTime = ()=>{
         let {startTime,endTime} = schedularTime;
         if((startTime).toString()===(endTime).toString()){

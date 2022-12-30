@@ -1,8 +1,4 @@
 const Color = {
-  // Main Colors
-  PRIMARY: '#62b34c', //APPLE
-  PRIMARY_DARK: '#10353A',//FIRE_FLY
-  // SECONDARY:
   DARK_GRAY: '#A5A5A5',
 
   TRANSPARENT: 'transparent',
@@ -26,23 +22,6 @@ const Color = {
   DARK_CYAN: '#01a66e',
   WHITE_SMOKE: '#F5F4F2',
 
-  // OnBoarding Text Color
-  ONBOARDING_TEXT: '#325f95',// DARK_MODERATE BLUE
-
-  // SignIn-SignUp label color
-  ACTIVE_COLOR: '#182b56', // DARK_BLUE
-  INACTIVE_COLOR:'#325f95', // DARK_MODERATE BLUE
-
-  // Button Color
-  GRADIENT1: '#29B76D',
-  GRADIENT2: '#2A97A6',
-
-  // Auth Screen BG_Color
-  GRADIENT3: '#6DC999',
-  GRADIENT4: '#73BFC9',
-
-  // boxContainer BG_COLOR
-  BOX_BG: '#f8fcfc',
   // Enegry consumption card BG color
   BLUE: '#747AF8',
   LIGHT_BLUE: '#8187FA',

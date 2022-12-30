@@ -9,9 +9,11 @@ const EnergyConsumptionCard = () => {
   const {pinsHistoryData} = useSelector(state => state.history);
 
   const getTodayData = (data)=>{
+    console.log('data: ', data);
     let totleUnit = 0;
     if(data){
       const arrayData = Object.values(data);
+      console.log('arrayData: ', arrayData);
       for(let i=0; i<arrayData.length;i++){
         totleUnit = totleUnit + arrayData[i].totleUnit
       }

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, ScrollView, FlatList, SafeAreaView,Text} from 'react-native';
+import {View, ScrollView, FlatList, SafeAreaView,StyleSheet,TouchableOpacity,Image,RefreshControl} from 'react-native';
 
 import EnergyConsumptionCard from '../../components/EnergyConsumptionCard';
 import RoomCard from '../../components/RoomCard';
@@ -10,52 +10,8 @@ import APIs from '../../api/APIs';
 import AlertBox from '../../components/AlertBox';
 import { updateHistory, updatePinsHistoryData } from '../../redux/reducers/historySlice';
 import { groupByKey } from '../../utils/helpers';
-import moment from "moment"
+import moment from "moment";
 import { UNIT_PRICE } from '../../utils/constants';
-const roomData = [
-  {
-    id: 123,
-    name: 'Living Room',
-    totalDevices: 12,
-    status: 'off',
-    power: 0,
-    image: require('../../assets/images/calendar.png'),
-    deviceList: [
-      {id: 'Fan', status: 'on', pinId: '111'},
-      {id: 'AC', status: 'off', pinId: '112'},
-      {id: 'TV', status: 'on', pinId: '113'},
-      {id: 'Lights', status: 'on', pinId: '114'},
-      {id: 'Alexa', status: 'off', pinId: '115'},
-    ],
-  },
-  {
-    id: 223,
-    name: 'Kitchen',
-    totalDevices: 8,
-    status: 'on',
-    power: 12,
-    image: require('../../assets/images/calendar.png'),
-    deviceList: [{id: 'Fan', status: 'off', pinId: '121'}],
-  },
-  {
-    id: 323,
-    name: 'Study Room',
-    totalDevices: 4,
-    status: 'on',
-    power: 21,
-    image: require('../../assets/images/calendar.png'),
-    deviceList: [{id: 'Fan', status: 'off', pinId: '131'}],
-  },
-  {
-    id: 423,
-    name: 'Bed Room',
-    totalDevices: 3,
-    status: 'off',
-    power: 18,
-    image: require('../../assets/images/calendar.png'),
-    deviceList: [{id: 'Fan', status: 'on', pinId: '141'}],
-  },
-];
 export const Dashboard = () => {
   const {history, pinsHistoryData} = useSelector(state => state.history);
 
@@ -63,26 +19,50 @@ export const Dashboard = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
+
+  const [refreshing, setRefreshing] = React.useState(false);
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+  const onRefresh = React.useCallback(() => {
+    getDevices();
+  }, []);
+
   const getDeviceHistory = (id) => {
     APIs.getHistory({
       device_id: id
   })
     .then(res => {
+      setRefreshing(false)
       dispatch(updateHistory(res.data));
     })
     .catch(error => console.log('get history error', error));
   }
 
+  // const getDeviceHistory = id => {
+  //   APIs.getHistory({
+  //     device_id: '63ad829f9f933d1c3462cc41',
+  //   })
+  //     .then(res => {
+  //       dispatch(updateHistory(res.data));
+  //       // setState(res.data[0]);
+  //     })
+  //     .catch(error => console.log('getMyDevice error', error));
+  // };
 
-  useEffect(() => {
-    let param = {user_id: '63aec6a271076673a32d7605'};
+  const getDevices = () => {
+    setRefreshing(true);
+    let param = {user_id: '63aef176d6cc7091ed3bcab3'};
     APIs.getMyDevice(param)
       .then(res => {
         getDeviceHistory(res?.data[0]?.devices[0]?._id)  
         setState(res.data[0]);
       })
       .catch(error => console.log('getMyDevice error', error));
-    
+  }
+
+  useEffect(() => {
+    getDevices();
   }, []);
 
   const getTotleAmoutOfPin = (pinHistory) => {
@@ -96,13 +76,14 @@ export const Dashboard = () => {
      totle = diffHours;
      totleUnit = (pinHistory[0].defaultWattOfPin * diffHours )/ 1000
     }
-    for(let i=0;i<pinHistory.length; i++){
-      if(pinHistory[i].switch_off_time && pinHistory[i].switch_on_time){
+    for (let i = 0; i < pinHistory.length; i++) {
+      if (pinHistory[i].switch_off_time && pinHistory[i].switch_on_time) {
         let duration = Number(pinHistory[i].duration.replace('hr', ''));
         totle = totle + duration;
         totleUnit = pinHistory[i].consumptionWattPerHour / 1000
       }
     }
+    console.log('totle: ', totle);
     return {
       totleDuration:totle,
       totleUnit,
@@ -111,7 +92,7 @@ export const Dashboard = () => {
       pinId:pinHistory[0].pin_Id,
       watt:pinHistory[0].defaultWattOfPin
     }
-  }
+  };
 
   const handleUpdateHistory = (history) => {
       console.log(groupByKey(history,"pin_Id"));
@@ -151,12 +132,26 @@ export const Dashboard = () => {
   };
   return (
     <SafeAreaView>
-      <ScrollView>
-        <View>
-          <Label mt={10} ph={20} bolder>
-            Hello, Sanjay Punani ☀️
-          </Label>
-        </View>
+      <View style={styles.header}>
+        <Label mt={10} bolder>
+          Hello, Sanjay Punani ☀️
+        </Label>
+        <TouchableOpacity onPress={() => navigation.navigate('PublicRoute')}>
+          <Image
+            source={require('../../assets/images/logout.png')}
+            style={styles.image}
+          />
+        </TouchableOpacity>
+      </View>
+      <ScrollView
+        
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
         <EnergyConsumptionCard />
         <FlatList
           data={state?.devices || []}
@@ -199,3 +194,12 @@ export const Dashboard = () => {
     </SafeAreaView>
   );
 };
+const styles = StyleSheet.create({
+  image: {height: 15, width: 15, alignSelf: 'center'},
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: 20,
+  },
+})

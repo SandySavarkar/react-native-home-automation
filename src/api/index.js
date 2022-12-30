@@ -34,7 +34,6 @@ Api.interceptors.response.use(
 		if (error?.response?.status === 401 && error?.response?.data?.message==="Your session has expired") {
 			AsyncStorage.removeItem("token");
 		}else if(error?.response === undefined){
-            console.log('error :>> ', error);
             return error
 		} 
 		return Promise.reject(error?.response);

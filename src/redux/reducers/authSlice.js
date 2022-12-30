@@ -9,7 +9,6 @@ const authSlice =  createSlice({
     initialState,
     reducers:{
         saveAuthData(state,action){
-            console.log('state,action: ', state,action);
             state.auth = action.payload;
         }
     }

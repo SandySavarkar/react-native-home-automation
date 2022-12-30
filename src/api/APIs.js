@@ -8,11 +8,9 @@ export default {
     //     return Api.put(`/updateUser/${id}`,data)
     // },
     scheduleTime(param){
-        console.log('param: ', param);
         return Api.put("/scheduleTime",param)
     },
     setLimit(param){
-        console.log('param: ', param);
         return Api.put("/setLimit",param)
     },
     getHistory(param){

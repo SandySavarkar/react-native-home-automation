@@ -5,7 +5,6 @@ import moment from 'moment'
 
 const DeviceStatusHistory = ({history}) => {
     const renderItem = ({item}) =>{
-        console.log('item.switch_on_time: ', item.switch_on_time);
         let color = item.consumption >100 ? 'red':item.consumption==100?'orange':'green'
         return (
             <View style={styles.container}>
@@ -14,7 +13,7 @@ const DeviceStatusHistory = ({history}) => {
                 <Text style={styles.width}>{item.switch_off_time ? moment(item.switch_off_time).format("DD/MM/YYYY hh:mm") : "Still On"}</Text>
                 <View style={styles.container}>
                     <View style={[styles.mark,{backgroundColor:color}]}></View>
-                    <Text>{item.consumptionWattPerHour}kWh</Text>
+                    <Text>{(item.consumptionWattPerHour/1000)}kWh</Text>
                 </View>
             </View>
         )
@@ -26,8 +25,8 @@ const DeviceStatusHistory = ({history}) => {
         data = {history}
          ListHeaderComponent={()=>(
             <View style={styles.container}>
-            <Text style={[styles.width,{fontWeight:'bold'}]}>{"Device On Time"}</Text> 
-            <Text style={[styles.width,{fontWeight:'bold'}]}>{'Device Off Time'}</Text>
+            <Text style={[styles.width,{fontWeight:'bold'}]}>{"On Time"}</Text> 
+            <Text style={[styles.width,{fontWeight:'bold'}]}>{'Off Time'}</Text>
             <View style={styles.container}>
                 <Text style={{fontWeight:'bold'}}>Consumption</Text>
             </View>

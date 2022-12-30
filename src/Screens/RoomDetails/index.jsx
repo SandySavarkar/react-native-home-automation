@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     View,
     TextInput,
+    SafeAreaView
   } from 'react-native';
   import React, {useMemo, useState, useEffect, useContext, useRef} from 'react';
   import DeviceListing from '../../components/DeviceListing';
@@ -42,6 +43,8 @@ import moment from 'moment'
       name: 'Light',
     },
   ];
+
+  var globlePinArray = [];
   
   export const RoomDetails = ({route}) => {
     const {details} = route?.params;
@@ -53,7 +56,7 @@ import moment from 'moment'
     const [limit, setLimit] = useState();
     const socket = useContext(SocketContext);
     const {pinsHistoryData,history} = useSelector(state => state.history);
-
+    globlePinArray = pinsArray;
 
     const getDeviceHistory = (id) => {
       APIs.getHistory({
@@ -123,9 +126,10 @@ import moment from 'moment'
     },[activePinId,pinsHistoryData]);
 
     const updatePinValue = (item) => {
-      let tempItem = [...pinsArray];
-      const activePin = pinsArray.find(item => item.pinId === activePinId);
-      const index = tempItem.findIndex(e => e.pinId === activePin.pinId);
+      console.log('item: ', item);
+      let tempItem = [...globlePinArray];
+      const index = tempItem.findIndex(e => e.pinId === item.pinId);
+      console.log('index: ', index);
       tempItem[index] = {
         ...tempItem[index],
         status: item.value
@@ -142,6 +146,9 @@ import moment from 'moment'
   
       socket.emit('join_me', joinData);
       socket.on('pin_state', data => {
+        updatePinValue(data);
+      });
+      socket.on('buttonState', data => {
         updatePinValue(data);
       });
     }, [socket]);
@@ -181,7 +188,7 @@ import moment from 'moment'
   
     }
     return (
-      <View>
+      <SafeAreaView>
         <Text style={styles.header}>{details?.name}</Text>
         <DeviceListing
           activePinId={activePinId}
@@ -221,15 +228,7 @@ import moment from 'moment'
               </Text>
             </TouchableOpacity>
           </View>
-        {/* // ) : (
-        //   <TouchableOpacity */}
-        {/* //     onPress={() => console.log('heekke')}
-        //     style={styles.button}>
-        //     <Text style={[styles.text, {color: Color.WHITE}]}>
-        //       Set Consumption Limit
-        //     </Text>
-        //   </TouchableOpacity> */}
-        {/* // )} */}
+      
         <TouchableOpacity
           onPress={() => setScheduleModal(true)}
           style={styles.button}>
@@ -258,7 +257,7 @@ import moment from 'moment'
             }}
           />
         </BottomModal>
-      </View>
+      </SafeAreaView>
     );
   };
   const styles = StyleSheet.create({

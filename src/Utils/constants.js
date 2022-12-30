@@ -1,5 +1,5 @@
-export const SERVER_URL = 'http://192.168.1.222:8090/api';
-export const SOCKET_URL = 'http://192.168.1.222:8090';
+export const SERVER_URL = 'http://192.168.1.155:8090/api';
+export const SOCKET_URL = 'http://192.168.1.155:8090';
 
 export const UNIT_PRICE = 12
 // export const SERVER_URL = 'https://probvision.project-demo.info:3000';
