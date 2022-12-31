@@ -9,7 +9,7 @@ const BottomModal = ({header,isOpen,handleOnClose,children}) => {
         <View style={styles.container}>
         <View style={styles.mainContainer}>
         <View style={styles.header}>
-            <Text style={{fontSize:20,fontWeight:'bold'}}>{header}</Text>
+            <Text style={{fontSize:20,fontWeight:'bold',color:Color.NORMAL_TEXT_COLOR}}>{header}</Text>
             <TouchableOpacity onPress={handleOnClose}>
             <Image source={require('../../assets/images/logout.png')} style={{height:20,width:20}}/>
             </TouchableOpacity>

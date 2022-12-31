@@ -3,7 +3,8 @@ import {Image, StyleSheet,  View} from 'react-native';
 import Label from '../Label';
 import Color from '../../utils/Color';
 import { useSelector } from 'react-redux';
-import {UNIT_PRICE} from '../../utils/constants'
+import {UNIT_PRICE} from '../../utils/constants';
+import moment from 'moment';
 
 const EnergyConsumptionCard = () => {
   const {pinsHistoryData} = useSelector(state => state.history);
@@ -38,8 +39,8 @@ const EnergyConsumptionCard = () => {
             source={require('../../assets/images/calendar.png')}
             style={{height: 20, width: 20}}
           />
-          <Label xsmall color={Color.WHITE}>
-            16 Nov, 2022
+          <Label xsmall color={Color.WHITE} ph={3}>
+            {moment(new Date()).format('ll')}
           </Label>
         </View>
       </View>

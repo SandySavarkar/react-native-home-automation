@@ -9,9 +9,9 @@ import {
 import React, {useEffect, useState} from 'react';
 import Color from '../../utils/Color';
 
-const DeviceView = ({data, active, onPress}) => {
+const DeviceView = ({data, active, onPress, key}) => {
   return (
-    <View style={styles.container}>
+    <View style={styles.container} key={key}>
       <TouchableOpacity
         style={[
           styles.subContainer,
@@ -39,6 +39,7 @@ const DeviceListing = ({data, handleClick, activePinId}, props) => {
   const renderItem = ({item}) => {
     return (
       <DeviceView
+        key={item.pinId}
         data={item}
         active={activePinId === item?.pinId}
         onPress={() => {
@@ -52,13 +53,14 @@ const DeviceListing = ({data, handleClick, activePinId}, props) => {
 
   return (
     <>
+    {data?
       <FlatList
-        data={data}
-        horizontal
-        keyExtractor={item => item.pinId}
-        renderItem={renderItem}
-        style={{alignSelf: 'center'}}
-      />
+      data={data}
+      horizontal
+      keyExtractor={item => item.pinId}
+      renderItem={renderItem}
+      style={{alignSelf: 'center'}}
+    />:null}
     </>
   );
 };

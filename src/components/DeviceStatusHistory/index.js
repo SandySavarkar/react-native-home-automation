@@ -43,7 +43,7 @@ const DeviceStatusHistory = ({history}) => {
         header
         keyExtractor={item=>item.id}
         />:
-        <Text >History not found</Text>}
+        <Text style={styles.textColor}>History not found</Text>}
     </View>
   )
 }

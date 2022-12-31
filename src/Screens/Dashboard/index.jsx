@@ -13,6 +13,7 @@ import { groupByKey } from '../../utils/helpers';
 import moment from "moment";
 import { UNIT_PRICE } from '../../utils/constants';
 import { clear } from '../../redux/reducers/authSlice';
+import Color from '../../utils/Color';
 export const Dashboard = () => {
   const {history, pinsHistoryData} = useSelector(state => state.history);
   const {auth} = useSelector(state => state.auth);
@@ -20,7 +21,7 @@ export const Dashboard = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-
+  
   const [refreshing, setRefreshing] = React.useState(false);
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -130,8 +131,8 @@ export const Dashboard = () => {
   return (
     <SafeAreaView>
       <View style={styles.header}>
-        <Label mt={10} bolder>
-          Hello, Sanjay Punani ☀️
+        <Label mt={10} bolder color={Color.NORMAL_TEXT_COLOR}>
+          Hello, {auth?.name} ☀️
         </Label>
         <TouchableOpacity onPress={handleLogout}>
           <Image
