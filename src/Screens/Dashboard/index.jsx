@@ -21,6 +21,12 @@ export const Dashboard = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getDevices();
+    });
+    return unsubscribe;
+  }, [navigation]);
   
   const [refreshing, setRefreshing] = React.useState(false);
   const wait = (timeout) => {
@@ -56,10 +62,6 @@ export const Dashboard = () => {
   useEffect(() => {
     getDevices();
   },[]);
-
-  useEffect(() => {
-    getDevices();
-  }, []);
 
   const getTotleAmoutOfPin = (pinHistory) => {
     let totle = 0;
@@ -152,6 +154,7 @@ export const Dashboard = () => {
         }
       >
         <EnergyConsumptionCard />
+      <Text style={{textAlign:'center'}}>Pull to refresh (get latest data)</Text>
         <FlatList
           data={state?.devices || []}
           renderItem={renderRoomCard}
