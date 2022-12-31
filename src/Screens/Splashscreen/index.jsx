@@ -21,7 +21,7 @@ export const Splashscreen = () => {
   return (
     <View style={styles.container}>
       <Image source={require('../../assets/images/logo.png')} style={styles.image}/>
-      <Text>Nikola Techies welcomes you</Text>
+      <Text>Welcomes you</Text>
     </View>
   );
 };

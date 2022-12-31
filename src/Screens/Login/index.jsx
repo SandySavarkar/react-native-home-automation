@@ -1,11 +1,12 @@
 import {
+  BackHandler,
   SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './style';
 import Color from '../../utils/Color';
 import { useNavigation } from '@react-navigation/native';
@@ -18,6 +19,15 @@ export const Login = () => {
   const [passwordError, setPasswordError] = useState('');
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
+    }
+  }, [])
+  const handleBackButton = () => {
+    return true;
+  }
   const handleSubmit = () => {
     // var isValid;
     // let {email, password} = user;
