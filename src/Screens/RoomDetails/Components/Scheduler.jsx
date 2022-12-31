@@ -3,11 +3,15 @@ import React,{useState} from 'react';
 import DateTimePicker from '../../../components/DateTimePicker';
 import Color from '../../../utils/Color';
 import APIs from '../../../api/APIs'
+import { useContext } from 'react';
+import { SocketContext } from '../../../contexts/Socket';
 
 const Scheduler = ({deviceInfo, cbSuccess}) => {
     const [schedularTime, setSchedularTime] = useState({startTime:new Date(),endTime:new Date()});
-    const [errorMessage, setErrorMessage] = useState('')
+    const [errorMessage, setErrorMessage] = useState('');
+    const socket = useContext(SocketContext);
     const handleSchedulerTime = ()=>{
+    
         let {startTime,endTime} = schedularTime;
         if((startTime).toString()===(endTime).toString()){
             setErrorMessage('Please set proper time interval');
@@ -19,16 +23,17 @@ const Scheduler = ({deviceInfo, cbSuccess}) => {
                 "scheduleStartDateTime":startTime,
                 "scheduleStopDateTime":endTime
             }
+            socket.emit('schedule_pin', params);
             // api call
-            APIs.scheduleTime(params).then(res=>{
-              console.log('res: ', res);
-            cbSuccess()
+            // APIs.scheduleTime(params).then(res=>{
+            //   console.log('res: ', res);
+            // cbSuccess()
 
-            }).catch((error)=>{
-              console.log('error', error)
-            setErrorMessage(error.message)
+            // }).catch((error)=>{
+            //   console.log('error', error)
+            // setErrorMessage(error.message)
 
-            })
+            // })
         }
     }
   return (

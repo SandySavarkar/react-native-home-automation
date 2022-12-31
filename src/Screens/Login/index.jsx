@@ -46,7 +46,6 @@ export const Login = () => {
         type:'user'
       }
       APIs.login(param).then(res=>{
-        console.log('login res', res)
         if(!res.data.message){
           dispatch(saveAuthData(res?.data))
         navigation.navigate('AuthRoute')

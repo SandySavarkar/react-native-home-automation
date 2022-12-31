@@ -41,7 +41,6 @@ export const Dashboard = () => {
   }
 
   const getDevices = () => {
-    console.log('auth.id: ', auth.id);
     let param = {user_id: auth.id};
     
     APIs.getMyDevice(param)
@@ -89,7 +88,6 @@ export const Dashboard = () => {
   };
 
   const handleUpdateHistory = (history) => {
-      console.log(groupByKey(history,"pin_Id"));
       const pinsArray = Object.values(groupByKey(history,"pin_Id"));
       let pinHistoryData = {};
       for(let i=0; i<pinsArray.length; i++){
@@ -105,7 +103,8 @@ export const Dashboard = () => {
   },[history]);
 
   const checkForLimit = (item) => {
-    let totleUnit = pinsHistoryData[item.pinId]?.totleUnit;
+    const watt = pinsHistoryData[item.pinId].history[0].defaultWattOfPin
+    let totleUnit = ((pinsHistoryData[item.pinId].totleDuration*watt)/1000);
     if(totleUnit){
       if(totleUnit > item.limit){
         return {
