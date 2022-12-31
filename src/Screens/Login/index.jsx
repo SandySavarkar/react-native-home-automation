@@ -1,5 +1,4 @@
 import {
-  BackHandler,
   SafeAreaView,
   Text,
   TextInput,
@@ -19,15 +18,7 @@ export const Login = () => {
   const [passwordError, setPasswordError] = useState('');
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-    return () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
-    }
-  }, [])
-  const handleBackButton = () => {
-    return true;
-  }
+ 
   const handleSubmit = () => {
     // var isValid;
     // let {email, password} = user;

@@ -10,13 +10,16 @@ const EnergyConsumptionCard = () => {
   const {pinsHistoryData} = useSelector(state => state.history);
 
   const getTodayData = (data)=>{
-    console.log('data: ', data);
     let totleUnit = 0;
+    let totleDuration = 0;
+    
     if(data){
       const arrayData = Object.values(data);
-      console.log('arrayData: ', arrayData);
       for(let i=0; i<arrayData.length;i++){
-        totleUnit = totleUnit + arrayData[i].totleUnit
+
+        const watt = arrayData[i].history[0].defaultWattOfPin
+        totleUnit = totleUnit + ((arrayData[i].totleDuration*watt)/1000);
+        totleDuration = totleDuration + arrayData[i].totleDuration
       }
     }
     return {

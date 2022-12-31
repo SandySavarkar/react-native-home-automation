@@ -8,12 +8,16 @@ const DeviceStatusHistory = ({history}) => {
         let color = item.consumption >100 ? 'red':item.consumption==100?'orange':'green'
         return (
             <View style={styles.container}>
-                <Text style={styles.width}>{moment(item.switch_on_time).format("DD/MM/YYYY hh:mm")}</Text>
+                <Text style={styles.width}>{moment(item.switch_on_time).format("DD MMM hh:mm")}</Text>
                 
-                <Text style={styles.width}>{item.switch_off_time ? moment(item.switch_off_time).format("DD/MM/YYYY hh:mm") : "Still On"}</Text>
+                <Text style={[styles.width,{color:item.switch_off_time ? "black" : "red"}]}>{item.switch_off_time ? moment(item.switch_off_time).format("DD MMM hh:mm") : "Still On"}</Text>
                 <View style={styles.container}>
                     <View style={[styles.mark,{backgroundColor:color}]}></View>
                     <Text>{(item.consumptionWattPerHour/1000).toFixed(2)}kWh</Text>
+                </View>
+                <View style={[styles.container, {marginRight:32}]}>
+                    <View style={[styles.mark,{backgroundColor:color}]}></View>
+                    <Text>{(item.cost).toFixed(2)}₹</Text>
                 </View>
             </View>
         )
@@ -28,7 +32,10 @@ const DeviceStatusHistory = ({history}) => {
             <Text style={[styles.width,{fontWeight:'bold'}]}>{"On Time"}</Text> 
             <Text style={[styles.width,{fontWeight:'bold'}]}>{'Off Time'}</Text>
             <View style={styles.container}>
-                <Text style={[{fontWeight:'bold'},styles.textColor]}>Consumption</Text>
+                <Text style={{fontWeight:'bold'}}>Unit</Text>
+            </View>
+            <View style={styles.container}>
+                <Text style={{fontWeight:'bold'}}>Cost</Text>
             </View>
         </View>
         )}
@@ -59,7 +66,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         alignItems:'center',
         paddingVertical:3,
-        width:Dimensions.get('window').width/3
+        width:Dimensions.get('window').width/4
     },
    mark:{
     padding:3,
@@ -67,8 +74,5 @@ const styles = StyleSheet.create({
     alignSelf:'center',
     marginRight:5
    },
-   width:{width:Dimensions.get('window').width/3,
-        color:Color.NORMAL_TEXT_COLOR
-    },
-    textColor:{color:Color.NORMAL_TEXT_COLOR}
+   width:{width:Dimensions.get('window').width/4}
 })

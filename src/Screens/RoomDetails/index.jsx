@@ -236,18 +236,21 @@ import moment from 'moment'
             </TouchableOpacity>
           </View>
               <View>
-              <Text style={styles.info}>Consumed unit {activePin?.pinName} : {activePinHistory?.totleUnit? (activePinHistory?.totleUnit)?.toFixed(2):0.0} kWh</Text>
-              <Text style={styles.info}>Total Cost: {activePinHistory?.totleCost?(activePinHistory?.totleCost).toFixed(2):0} ₹</Text>
+              <Text style={styles.info}>Unit Consumed by {activePin?.pinName} : {((activePinHistory?.totleDuration*activePin?.watt)/1000)?.toFixed(2)} kWh</Text>
+              {/* <Text style={styles.info}>Total Cost: {(activePinHistory?.totleCost)?.toFixed(2)} ₹</Text> */}
+              <Text style={styles.info}>Total Cost: {(((activePinHistory?.totleDuration*activePin?.watt)/1000)*UNIT_PRICE)?.toFixed(2)} ₹</Text>
+              <Text style={styles.info}>Watt: {(activePin?.watt)} </Text>
+              <Text style={styles.info}>Total Duration: {(activePinHistory?.totleDuration)?.toFixed(2) + "hr"} </Text>
               </View>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => setScheduleModal(true)}
           style={styles.button}>
           <Text style={[styles.text, {color: Color.WHITE}]}>
             {activePin.isScheduled ? 'Update' : 'Schedule'} Automation Time
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <DeviceStatusHistory history={activePinHistory?.history} />
-        <BottomModal
+        {/* <BottomModal
           isOpen={isOpenScheduleModal}
           header={`Schedule ${activePin.pinName}`}
           handleOnClose={() => setScheduleModal(false)}>
@@ -259,7 +262,7 @@ import moment from 'moment'
               pinId: activePin.pinId,
             }}
           />
-        </BottomModal>
+        </BottomModal> */}
         </ScrollView>
       </SafeAreaView>
     );
